@@ -1,0 +1,35 @@
+{
+  "name": "url-shortener-server",
+  "version": "1.0.0",
+  "description": "Express server to handle API requests and redirects in the URL Shortener.",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon src/app.js",
+    "test": "mocha src/test/*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aosousa/url-shortener.git"
+  },
+  "author": "André Sousa",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aosousa/url-shortener/issues"
+  },
+  "homepage": "https://github.com/aosousa/url-shortener#readme",
+  "dependencies": {
+    "@prisma/client": "^5.4.0",
+    "chai": "^4.3.10",
+    "chai-http": "^4.4.0",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "express-validator": "^7.0.1",
+    "nodemon": "^3.0.1",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.0"
+  },
+  "devDependencies": {
+    "mocha": "^10.2.0",
+    "prisma": "^5.4.0"
+  }
+}

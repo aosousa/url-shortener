@@ -1,0 +1,71 @@
+paths:
+  /:
+    servers:
+      - url: "/"
+    get:
+      tags:
+        - Links
+      summary: Get all links
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#"
+
+  /{linkId}:
+
+components:
+  schemas:
+    links:
+      type: array
+      $ref: "#/components/schemas/link"
+
+    link:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1
+          description: ID of the link
+        title:
+          type: string
+          example: "Personal Website"
+          description: Title of the link
+        original_link:
+          type: string
+          example: "https://aosousa.com"
+          description: Link to shorten
+        link_code:
+          type: string
+          example: aosousa
+          description: Shortened link code
+        created_at:
+          type: string
+          format: date-time
+          description: Date and time when the link was created in YYYY-MM-DDTHH:mm:ss.sssZ format
+        views:
+          type: number
+          example: 10
+          description: Number of times a successful redirect to the chosen link occurred
+
+    create_link_body:
+      type: object
+      required:
+        - original_link
+      properties:
+        title:
+          type: string
+          example: "Personal Website"
+          description: Title of the link
+        original_link:
+          type: string
+          example: https://www.gaa.ie/fixtures-results/
+          description: Link to shorten
+        link_code:
+          type: string
+          example: gaa
+          description: Chosen shortened link code. If none is provided, a link code will be generated.
