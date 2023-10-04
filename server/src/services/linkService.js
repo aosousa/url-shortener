@@ -7,7 +7,7 @@ const prisma = new PrismaClient()
  * @param {string} link_code Link code to use in query
  * @returns {object|null} Link object if one was found, null otherwise
  */
-linkService.findLinkByCode = async (code) => {
+linkService.findByCode = async (code) => {
   const link = await prisma.link.findUnique({
     where: {
       link_code: code
@@ -22,7 +22,7 @@ linkService.findLinkByCode = async (code) => {
  * @param {number} id Link ID
  * @returns {object|null} Link object if one was found, null otherwise
  */
-linkService.findLinkByID = async (id) => {
+linkService.findByID = async (id) => {
   const link = await prisma.link.findUnique({
     where: {
       id
@@ -37,12 +37,24 @@ linkService.findLinkByID = async (id) => {
  * @param {number} id Link ID
  * @param {object} data Link data to update
  */
-linkService.updateLink = async (id, data) => {
-  await prisma.link.update({
+linkService.update = async (id, data) => {
+  return prisma.link.update({
     where: {
       id
     },
     data
+  })
+}
+
+/**
+ * Delete a link by ID
+ * @param {number} id Link ID
+ */
+linkService.delete = async (id) => {
+  await prisma.link.delete({
+    where: {
+      id
+    }
   })
 }
 

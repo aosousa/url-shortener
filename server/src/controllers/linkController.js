@@ -1,53 +1,13 @@
 const express = require('express')
 const linkController = express.Router()
 const { body, validationResult } = require('express-validator')
-
 const linkService = require('../services/linkService')
-
 const utils = require('../utils/utils')
-
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 
 /**
- * Handle requests to GET '/:code', where code is the shortened code
- * either automatically generated or selected by the user when
- * creating a link.
- * 
- * If a row with that code exists in the database, it will redirect 
- * the user to the full URL. Otherwise, it will redirect the user
- * to the frontend's 404
- * @param {*} request 
- * @param {*} response 
- */
-const handleRedirect = async (request, response) => {
-  const link = await linkService.findLinkByCode(request.params.code)
-  if (link) {
-    // update link's views in the database by one
-    linkService.updateLink(link.id, { views: link.views + 1 })
-
-    response.redirect(link.original_link)
-  } else {
-    // TODO: redirect to frontend's 404 page
-    response.status(400).json({
-      error: 'No link with that code found was found in the database'
-    })
-  }
-}
-
-/**
- * Handle requests to GET '/'. Return the full list of links.
- * @param {*} request 
- * @param {*} response 
- */
-const getLinks = async (request, response) => {
-  const links = await prisma.link.findMany()
-
-  response.json(links)
-}
-
-/**
- * Handle requests to POST '/'. Create a new link if all of the required
+ * Handle requests to POST '/links/'. Create a new link if all of the required
  * properties are in the body, otherwise return error
  * @param {*} request 
  * @param {*} response 
@@ -61,10 +21,10 @@ const createLink = async (request, response) => {
     })
   }
 
-  let linkCode = request.body.link_code ?? utils.generateLinkCode(8)
+  let linkCode = request.body.link_code && request.body.link_code !== '' ? request.body.link_code : utils.generateLinkCode(8)
 
   // check if code is unique
-  let codeExists = await linkService.findLinkByCode(linkCode)
+  let codeExists = await linkService.findByCode(linkCode)
 
   if (request.body.link_code) {
     if (codeExists) {
@@ -76,13 +36,14 @@ const createLink = async (request, response) => {
     // regenerate code until a new one is found
     while (codeExists != null) {
       linkCode = utils.generateLinkCode(8)
-      codeExists = await linkService.findLinkByCode(linkCode)
+      codeExists = await linkService.findByCode(linkCode)
     }
   }
 
   const newLink = await prisma.link.create({
     data: {
-      ...request.body,
+      title: request.body.title,
+      original_link: request.body.original_link,
       link_code: linkCode
     }
   })
@@ -90,9 +51,53 @@ const createLink = async (request, response) => {
   response.json(newLink)
 }
 
-linkController.get('/:code', handleRedirect)
-linkController.get('/', getLinks)
-linkController.post('/', [
+/**
+ * Handle requests to PUT '/links/:id'. Update a link if one is found
+ * with the ID received in URL, otherwise return error
+ * @param {*} request 
+ * @param {*} response 
+ */
+const updateLink = async (request, response) => {
+  const result = validationResult(request)
+  if (!result.isEmpty()) {
+    return response.status(400).send({
+      error: `Invalid values in the following fields: ${result.array().map((err) => err.path).join(', ')}.`
+    })
+  }
+
+  // check if link with ID exists
+  const link = await linkService.findByID(Number(request.params.id))
+  if (!link) {
+    return response.status(400).send({
+      error: 'No link was found with the specified ID'
+    })
+  }
+}
+
+/**
+ * Handle requests to DELETE '/links/:id'. Delete a link if one is found
+ * with the ID received in URL, otherwise return error
+ * @param {*} request 
+ * @param {*} response 
+ */
+const deleteLink = async (request, response) => {
+  // check if link with ID exists
+  const link = await linkService.findByID(Number(request.params.id))
+  if (!link) {
+    return response.status(400).send({
+      error: 'No link was found with the specified ID'
+    })
+  }
+
+  try {
+    await linkService.delete(Number(request.params.id))
+    response.send({ status: true })
+  } catch (err) {
+    response.send({ status: false, error: err })
+  }
+}
+
+const linkValidations = [
   body('original_link').custom(async value => {
     // empty URL will fail the validation so we don't need to add the .notEmpty() validation
     const linkIsValid = utils.validateURL(value)
@@ -100,7 +105,11 @@ linkController.post('/', [
       throw new Error("Invalid link!")
     }
   }),
-  body('link_code').isLength({ min: 1, max: 8 })
-], createLink)
+  body('link_code').isLength({ max: 8 })
+]
+
+linkController.post('/', linkValidations, createLink)
+linkController.put('/:id', linkValidations, updateLink)
+linkController.delete('/:id', deleteLink)
 
 module.exports = linkController
