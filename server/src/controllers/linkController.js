@@ -3,8 +3,8 @@ const linkController = express.Router()
 const { body, validationResult } = require('express-validator')
 const linkService = require('../services/linkService')
 const utils = require('../utils/utils')
-const { PrismaClient } = require('@prisma/client')
-const prisma = new PrismaClient()
+// const { PrismaClient } = require('@prisma/client')
+// const prisma = new PrismaClient()
 
 /**
  * Handle requests to POST '/links/'. Create a new link if all of the required
@@ -40,12 +40,10 @@ const createLink = async (request, response) => {
     }
   }
 
-  const newLink = await prisma.link.create({
-    data: {
-      title: request.body.title,
-      original_link: request.body.original_link,
-      link_code: linkCode
-    }
+  const newLink = await linkService.create({
+    title: request.body.title,
+    original_link: request.body.original_link,
+    link_code: linkCode
   })
 
   response.json(newLink)
@@ -65,13 +63,30 @@ const updateLink = async (request, response) => {
     })
   }
 
+  const linkID = Number(request.params.id)
+
   // check if link with ID exists
-  const link = await linkService.findByID(Number(request.params.id))
-  if (!link) {
+  const linkByID = await linkService.findByID(linkID)
+  if (!linkByID) {
     return response.status(400).send({
-      error: 'No link was found with the specified ID'
+      error: 'No link was found with the specified ID!'
     })
   }
+
+  // check if link with received code exists and has a different ID than the one in param
+  const linkByCode = await linkService.findByCode(request.body.link_code)
+  if (linkByCode && linkByCode.id !== linkID) {
+    return response.status(400).send({
+      error: 'A link with that code already exists!'
+    })
+  }
+
+  const updatedLink = await linkService.update(linkID, {
+    title: request.body.title,
+    link_code: request.body.link_code
+  })
+
+  response.json(updatedLink)
 }
 
 /**
@@ -85,7 +100,7 @@ const deleteLink = async (request, response) => {
   const link = await linkService.findByID(Number(request.params.id))
   if (!link) {
     return response.status(400).send({
-      error: 'No link was found with the specified ID'
+      error: 'No link was found with the specified ID!'
     })
   }
 
@@ -97,7 +112,8 @@ const deleteLink = async (request, response) => {
   }
 }
 
-const linkValidations = [
+linkController.post('/', [
+  body('title').isLength({ max: 60 }),
   body('original_link').custom(async value => {
     // empty URL will fail the validation so we don't need to add the .notEmpty() validation
     const linkIsValid = utils.validateURL(value)
@@ -106,10 +122,13 @@ const linkValidations = [
     }
   }),
   body('link_code').isLength({ max: 8 })
-]
+], createLink)
 
-linkController.post('/', linkValidations, createLink)
-linkController.put('/:id', linkValidations, updateLink)
+linkController.put('/:id', [
+  body('title').isLength({ max: 60 }),
+  body('link_code').notEmpty().isLength({ max: 8 })
+], updateLink)
+
 linkController.delete('/:id', deleteLink)
 
 module.exports = linkController

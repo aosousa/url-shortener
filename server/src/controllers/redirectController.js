@@ -1,8 +1,6 @@
 const express = require('express')
 const redirectController = express.Router()
 const linkService = require('../services/linkService')
-const { PrismaClient } = require('@prisma/client')
-const prisma = new PrismaClient()
 
 /**
  * Handle requests to GET '/:code', where code is the shortened code
@@ -25,7 +23,7 @@ const handleRedirect = async (request, response) => {
   } else {
     // TODO: redirect to frontend's 404 page
     response.status(400).json({
-      error: 'No link with that code found was found in the database'
+      error: 'No link was found with the specified code!'
     })
   }
 }
@@ -36,7 +34,7 @@ const handleRedirect = async (request, response) => {
  * @param {*} response 
  */
 const getLinks = async (request, response) => {
-  const links = await prisma.link.findMany()
+  const links = await linkService.findAll()
 
   response.json(links)
 }

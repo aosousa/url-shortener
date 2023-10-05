@@ -1,14 +1,12 @@
 const express = require('express')
 const http = require('http')
 const cors = require('cors')
-// const expressValidator = require('express-validator')
 
 const indexRouter = require('./routes/index')
 
 const app = express()
 app.use(express.json())
 app.use(cors())
-// app.use(expressValidator())
 
 app.use('/', indexRouter)
 

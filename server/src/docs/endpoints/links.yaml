@@ -14,15 +14,126 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#"
+                $ref: "#/components/schemas/links"
 
-  /{linkId}:
+  /{code}:
+    servers:
+      - url: "/"
+    get:
+      tags:
+        - Links
+      summary: Redirect to the original link saved with the code in the parameter
+      parameters:
+        - in: path
+          name: code
+          schema:
+            type: string
+          required: true
+          description: Shortened code of the link
+      responses:
+        302:
+          description: Permanent Redirect
+
+  /links:
+    servers:
+      - url: "/"
+    post:
+      tags:
+        - Links
+      summary: Create a new link
+      produces:
+        - application/json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/create_link_body"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/create_link_response"
+
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/request_body_error"
+
+  /links/{id}:
+    servers:
+      - url: "/"
+    put:
+      tags:
+        - Links
+      summary: Update an existing link by ID
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: ID of the link to update
+      produces:
+        - application/json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/update_link_body"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/update_link_response"
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/request_body_error"
+                  - $ref: "#/components/schemas/invalid_id_error"
+    delete:
+      tags:
+        - Links
+      summary: Delete an existing link by ID
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: ID of the link to delete
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/delete_link_response"
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/invalid_id_error"
 
 components:
   schemas:
     links:
       type: array
-      $ref: "#/components/schemas/link"
+      items:
+        $ref: "#/components/schemas/link"
 
     link:
       type: object
@@ -33,24 +144,29 @@ components:
           description: ID of the link
         title:
           type: string
-          example: "Personal Website"
+          example: "IDASO"
           description: Title of the link
         original_link:
           type: string
-          example: "https://aosousa.com"
+          example: "https://www.idaso.ie/"
           description: Link to shorten
         link_code:
           type: string
-          example: aosousa
+          example: idaso
           description: Shortened link code
+        views:
+          type: number
+          example: 100
+          description: Number of times a successful redirect to the chosen link occurred
         created_at:
           type: string
           format: date-time
           description: Date and time when the link was created in YYYY-MM-DDTHH:mm:ss.sssZ format
-        views:
-          type: number
-          example: 10
-          description: Number of times a successful redirect to the chosen link occurred
+        updated_at:
+          type: string
+          nullable: true
+          format: date-time
+          description: Date and time of the last update to the link in YYYY-MM-DDTHH:mm:ss.sssZ format
 
     create_link_body:
       type: object
@@ -59,13 +175,122 @@ components:
       properties:
         title:
           type: string
-          example: "Personal Website"
+          example: "GAA Fixtures"
           description: Title of the link
         original_link:
           type: string
-          example: https://www.gaa.ie/fixtures-results/
+          example: "https://www.gaa.ie/fixtures-results/"
           description: Link to shorten
         link_code:
           type: string
           example: gaa
           description: Chosen shortened link code. If none is provided, a link code will be generated.
+
+    create_link_response:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 2
+          description: ID of the link
+        title:
+          type: string
+          example: "GAA Fixtures"
+          description: Title of the link
+        original_link:
+          type: string
+          example: "https://www.gaa.ie/fixtures-results/"
+          description: Link to shorten
+        link_code:
+          type: string
+          example: gaa
+          description: Shortened link code
+        views:
+          type: number
+          example: 0
+          description: Number of times a successful redirect to the chosen link occurred
+        created_at:
+          type: string
+          format: date-time
+          description: Date and time when the link was created in YYYY-MM-DDTHH:mm:ss.sssZ format
+        updated_at:
+          type: string
+          nullable: true
+          format: date-time
+          description: Date and time of the last update to the link in YYYY-MM-DDTHH:mm:ss.sssZ format
+
+    update_link_body:
+      type: object
+      properties:
+        title:
+          type: string
+          example: "GAA Fixtures & Results"
+          description: Title of the link
+        link_code:
+          type: string
+          example: gaares
+          description: Chosen shortened link code. If none is provided, a link code will be generated.
+
+    update_link_response:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 2
+          description: ID of the link
+        title:
+          type: string
+          example: "GAA Fixtures & Results"
+          description: Title of the link
+        original_link:
+          type: string
+          example: "https://www.gaa.ie/fixtures-results/"
+          description: Link to shorten
+        link_code:
+          type: string
+          example: gaares
+          description: Shortened link code
+        views:
+          type: number
+          example: 0
+          description: Number of times a successful redirect to the chosen link occurred
+        created_at:
+          type: string
+          format: date-time
+          description: Date and time when the link was created in YYYY-MM-DDTHH:mm:ss.sssZ format
+        updated_at:
+          type: string
+          nullable: true
+          format: date-time
+          description: Date and time of the last update to the link in YYYY-MM-DDTHH:mm:ss.sssZ format
+
+    delete_link_response:
+      type: object
+      properties:
+        status:
+          type: boolean
+          example: true
+          description: Result of the operation
+
+    request_body_error:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Invalid values in the following fields: original_link."
+          description: Error when there are invalid values in the request body
+
+    invalid_id_error:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "No link was found with the specified ID!"
+          description: Error when the ID sent in params does not exist in the database
+
+    invalid_code_error:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "No link was found with the specified code!"

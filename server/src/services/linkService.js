@@ -3,12 +3,20 @@ const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 
 /**
+ * Get all links in the database
+ * @returns 
+ */
+linkService.findAll = async () => {
+  return prisma.link.findMany()
+}
+
+/**
  * Find a link by code 
  * @param {string} link_code Link code to use in query
  * @returns {object|null} Link object if one was found, null otherwise
  */
 linkService.findByCode = async (code) => {
-  const link = await prisma.link.findUnique({
+  const link = await prisma.link.findFirst({
     where: {
       link_code: code
     }
@@ -23,13 +31,23 @@ linkService.findByCode = async (code) => {
  * @returns {object|null} Link object if one was found, null otherwise
  */
 linkService.findByID = async (id) => {
-  const link = await prisma.link.findUnique({
+  const link = await prisma.link.findFirst({
     where: {
       id
     }
   })
 
   return link
+}
+
+/**
+ * Create a link
+ * @param {*} data 
+ */
+linkService.create = async (data) => {
+  return prisma.link.create({
+    data
+  })
 }
 
 /**
@@ -51,7 +69,7 @@ linkService.update = async (id, data) => {
  * @param {number} id Link ID
  */
 linkService.delete = async (id) => {
-  await prisma.link.delete({
+  return prisma.link.delete({
     where: {
       id
     }

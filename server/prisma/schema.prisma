@@ -8,10 +8,11 @@ datasource db {
 }
 
 model link {
-  id            Int      @id @default(autoincrement())
-  title         String?  @db.VarChar(60)
-  original_link String   @db.Text
-  link_code     String   @unique(map: "link_link_code_IDX") @db.VarChar(16)
-  created_at    DateTime @default(now()) @db.DateTime(0)
-  views         Int      @default(0)
+  id            Int       @id @default(autoincrement())
+  title         String?   @db.VarChar(60)
+  original_link String    @db.Text
+  link_code     String    @unique(map: "links_link_code_IDX") @db.VarChar(8)
+  views         Int       @default(0)
+  created_at    DateTime  @default(now()) @db.DateTime(0)
+  updated_at    DateTime? @db.DateTime(0)
 }

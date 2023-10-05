@@ -10,7 +10,7 @@ describe('Links endpoints', () => {
   let firstLink = null
   let nonExistentID = 999999999
   const code = utils.generateLinkCode(8)
-  const deleteIDs = []
+  const testLinkIDs = []
 
   // always create one link before proceeding
   before(() => {
@@ -23,123 +23,141 @@ describe('Links endpoints', () => {
         original_link: 'https://www.idaso.ie/',
         link_code: 'idaso'
       })
-      .end((err, res) => {
-        firstLink = res.body
+      .end((error, response) => {
+        firstLink = response.body
       })
   })
 
   // delete links that were generated during testing
   after(() => {
-    for (let i = 0; i < deleteIDs.length; i++) {
+    for (let i = 0; i < testLinkIDs.length; i++) {
       chai.request(app)
-        .delete(`/links/${deleteIDs[i]}`)
+        .delete(`/links/${testLinkIDs[i]}`)
         .end()
     }
   })
 
   it('creates a link with code in request', (done) => {
+    const model = {
+      title: 'Formula 1',
+      original_link: 'https://www.formula1.com',
+      link_code: code
+    }
+
     chai.request(app)
       .post('/links')
       .set('Content-Type', 'application/json')
       .type('json')
-      .send({
-        title: 'Formula 1',
-        original_link: 'https://www.formula1.com',
-        link_code: code
-      })
-      .end((err, res) => {
-        deleteIDs.push(res.body.id)
+      .send(model)
+      .end((error, response) => {
+        testLinkIDs.push(response.body.id)
 
-        expect(res.statusCode).to.equal(200)
-        expect(res.body).to.be.an('object')
-        expect(res.body).to.have.property('title')
-        expect(res.body.title).to.equal('Formula 1')
-        expect(res.body).to.have.property('original_link')
-        expect(res.body.original_link).to.equal('https://www.formula1.com')
-        expect(res.body).to.have.property('link_code')
-        expect(res.body.link_code).to.equal(code)
-        expect(res.body).to.have.property('views')
-        expect(res.body.views).to.equal(0)
+        expect(response.statusCode).to.equal(200)
+        expect(response.body).to.be.an('object')
+        expect(response.body).to.have.property('title')
+        expect(response.body.title).to.equal(model.title)
+        expect(response.body).to.have.property('original_link')
+        expect(response.body.original_link).to.equal(model.original_link)
+        expect(response.body).to.have.property('link_code')
+        expect(response.body.link_code).to.equal(model.link_code)
+        expect(response.body).to.have.property('views')
+        expect(response.body.views).to.equal(0)
+        expect(response.body).to.have.property('created_at')
+        expect(response.body.created_at).to.not.equal(null)
+        expect(response.body).to.have.property('updated_at')
+        expect(response.body.updated_at).to.equal(null)
         done()
       })
   })
 
   it('creates a link with generated code', (done) => {
+    const model = {
+      title: 'Formula 3',
+      original_link: 'https://www.fiaformula3.com'
+    }
+
     chai.request(app)
       .post('/links')
       .set('Content-Type', 'application/json')
       .type('json')
-      .send({
-        title: 'Formula 3',
-        original_link: 'https://www.fiaformula3.com'
-      })
-      .end((err, res) => {
-        deleteIDs.push(res.body.id)
+      .send(model)
+      .end((error, response) => {
+        testLinkIDs.push(response.body.id)
 
-        expect(res.statusCode).to.equal(200)
-        expect(res.body).to.be.an('object')
-        expect(res.body).to.have.property('title')
-        expect(res.body.title).to.equal('Formula 3')
-        expect(res.body).to.have.property('original_link')
-        expect(res.body.original_link).to.equal('https://www.fiaformula3.com')
-        expect(res.body).to.have.property('link_code')
-        expect(res.body.link_code.length).to.equal(8)
+        expect(response.statusCode).to.equal(200)
+        expect(response.body).to.be.an('object')
+        expect(response.body).to.have.property('title')
+        expect(response.body.title).to.equal(model.title)
+        expect(response.body).to.have.property('original_link')
+        expect(response.body.original_link).to.equal(model.original_link)
+        expect(response.body).to.have.property('link_code')
+        expect(response.body.link_code.length).to.equal(8)
+        expect(response.body).to.have.property('created_at')
+        expect(response.body.created_at).to.not.equal(null)
+        expect(response.body).to.have.property('updated_at')
+        expect(response.body.updated_at).to.equal(null)
         done()
       })
   })
 
   it('returns error when creating link with missing required properties', (done) => {
+    const model = {
+      title: 'Formula 2',
+      link_code: 'f2'
+    }
+
     chai.request(app)
       .post('/links')
       .set('Content-Type', 'application/json')
       .type('json')
-      .send({
-        title: 'Formula 2',
-        link_code: 'f2'
-      })
-      .end((err, res) => {
-        expect(res.statusCode).to.equal(400)
-        expect(res.body).to.be.an('object')
-        expect(res.body).to.have.property('error')
-        expect(res.body.error).to.equal('Invalid values in the following fields: original_link.')
+      .send(model)
+      .end((error, response) => {
+        expect(response.statusCode).to.equal(400)
+        expect(response.body).to.be.an('object')
+        expect(response.body).to.have.property('error')
+        expect(response.body.error).to.equal('Invalid values in the following fields: original_link.')
         done()
       })
   })
 
   it('returns error when creating a link with existing code', (done) => {
+    const model = {
+      title: 'Formula 1',
+      original_link: 'https://www.formula1.com',
+      link_code: code
+    }
+
     chai.request(app)
       .post('/links')
       .set('Content-Type', 'application/json')
       .type('json')
-      .send({
-        title: 'Formula 1',
-        original_link: 'https://www.formula1.com',
-        link_code: code
-      })
-      .end((err, res) => {
-        expect(res.statusCode).to.equal(400)
-        expect(res.body).to.be.an('object')
-        expect(res.body).to.have.property('error')
-        expect(res.body.error).to.equal('Specified code is already taken!')
+      .send(model)
+      .end((error, response) => {
+        expect(response.statusCode).to.equal(400)
+        expect(response.body).to.be.an('object')
+        expect(response.body).to.have.property('error')
+        expect(response.body.error).to.equal('Specified code is already taken!')
         done()
       })
   })
 
   it('returns error when creating a link with link_code that has more than 8 characters', (done) => {
+    const model = {
+      title: 'Formula 2',
+      original_link: 'https://www.fiaformula2.com',
+      link_code: 'morethan8'
+    }
+
     chai.request(app)
       .post('/links')
       .set('Content-Type', 'application/json')
       .type('json')
-      .send({
-        title: 'Formula 2',
-        original_link: 'https://www.fiaformula2.com',
-        link_code: 'morethan8'
-      })
-      .end((err, res) => {
-        expect(res.statusCode).to.equal(400)
-        expect(res.body).to.be.an('object')
-        expect(res.body).to.have.property('error')
-        expect(res.body.error).to.equal('Invalid values in the following fields: link_code.')
+      .send(model)
+      .end((error, response) => {
+        expect(response.statusCode).to.equal(400)
+        expect(response.body).to.be.an('object')
+        expect(response.body).to.have.property('error')
+        expect(response.body.error).to.equal('Invalid values in the following fields: link_code.')
         done()
       })
   })
@@ -147,68 +165,93 @@ describe('Links endpoints', () => {
   it('returns list of links', (done) => {
     chai.request(app)
       .get('/')
-      .end((err, res) => {
-        expect(res.statusCode).to.equal(200)
-        expect(res.body).to.be.an('array')
-        expect(res.body.length).to.be.above(0)
+      .end((error, response) => {
+        expect(response.statusCode).to.equal(200)
+        expect(response.body).to.be.an('array')
+        expect(response.body.length).to.be.above(0)
         done()
       })
   })
 
-  // it('updates a link', (done) => {})
+  it('updates a link', (done) => {
+    const model = {
+      title: 'Formula 2 Update',
+      link_code: 'f2update'
+    }
 
-  it('returns error when updating link with missing required properties', (done) => {
     chai.request(app)
-      .put(`/links/${firstLink.id}`)
+      .put(`/links/${testLinkIDs[0]}`)
       .set('Content-Type', 'application/json')
       .type('json')
-      .send({
-        title: 'Formula 2',
-        original_link: 'https://www.fiaformula2.com'
+      .send(model)
+      .end((error, response) => {
+        expect(response.statusCode).to.equal(200)
+        expect(response.body).to.be.an('object')
+        expect(response.body).to.have.property('title')
+        expect(response.body.title).to.equal(model.title)
+        expect(response.body).to.have.property('link_code')
+        expect(response.body.link_code).to.equal(model.link_code)
+        expect(response.body).to.have.property('updated_at')
+        expect(response.body.updated_at).to.not.equal(null)
+        done()
       })
-      .end((err, res) => {
-        expect(res.statusCode).to.equal(400)
-        expect(res.body).to.be.an('object')
-        expect(res.body).to.have.property('error')
-        expect(res.body.error).to.equal('Invalid values in the following fields: link_code.')
+  })
+
+  it('returns error when updating link with missing required properties', (done) => {
+    const model = {
+      title: 'Formula 2 Update',
+    }
+
+    chai.request(app)
+      .put(`/links/${testLinkIDs[0]}`)
+      .set('Content-Type', 'application/json')
+      .type('json')
+      .send(model)
+      .end((error, response) => {
+        expect(response.statusCode).to.equal(400)
+        expect(response.body).to.be.an('object')
+        expect(response.body).to.have.property('error')
+        expect(response.body.error).to.equal('Invalid values in the following fields: link_code.')
         done()
       })
   })
 
   it('returns error when trying to update link with ID that doesn\'t exist', (done) => {
+    const model = {
+      title: 'Formula 2 Update',
+      link_code: 'f2'
+    }
+
     chai.request(app)
       .put(`/links/${nonExistentID}`)
       .set('Content-Type', 'application/json')
       .type('json')
-      .send({
-        title: 'Formula 2',
-        original_link: 'https://www.fiaformula2.com',
-        link_code: 'f2'
-      })
-      .end((err, res) => {
-        expect(res.statusCode).to.equal(400)
-        expect(res.body).to.be.an('object')
-        expect(res.body).to.have.property('error')
-        expect(res.body.error).to.equal('No link was found with the specified ID')
+      .send(model)
+      .end((error, response) => {
+        expect(response.statusCode).to.equal(400)
+        expect(response.body).to.be.an('object')
+        expect(response.body).to.have.property('error')
+        expect(response.body.error).to.equal('No link was found with the specified ID!')
         done()
       })
   })
 
   it('returns error when updating a link\'s code to an existing one', (done) => {
+    const model = {
+      title: 'Formula 2 Update',
+      link_code: firstLink.link_code
+    }
+
     chai.request(app)
-      .put(`/links/${firstLink.id}`)
+      .put(`/links/${testLinkIDs[0]}`)
       .set('Content-Type', 'application/json')
       .type('json')
-      .send({
-        title: 'Formula 2',
-        original_link: 'https://www.fiaformula2.com',
-        link_code: firstLink.link_code
-      })
-      .end((err, res) => {
-        expect(res.statusCode).to.equal(400)
-        expect(res.body).to.be.an('object')
-        expect(res.body).to.have.property('error')
-        expect(res.body.error).to.equal('No link was found with the specified ID')
+      .send(model)
+      .end((error, response) => {
+        expect(response.statusCode).to.equal(400)
+        expect(response.body).to.be.an('object')
+        expect(response.body).to.have.property('error')
+        expect(response.body.error).to.equal('A link with that code already exists!')
         done()
       })
   })
@@ -217,9 +260,9 @@ describe('Links endpoints', () => {
     chai.request(app)
       .get(`/${firstLink.link_code}`)
       .redirects(0)
-      .end((err, res) => {
-        expect(res.headers.location).to.equal(`${firstLink.original_link}`)
-        expect(res.statusCode).to.equal(302)
+      .end((error, response) => {
+        expect(response.headers.location).to.equal(`${firstLink.original_link}`)
+        expect(response.statusCode).to.equal(302)
         done()
       })
   })
@@ -229,11 +272,11 @@ describe('Links endpoints', () => {
   it('deletes a link', (done) => {
     chai.request(app)
       .delete(`/links/${firstLink.id}`)
-      .end((err, res) => {
-        expect(res.statusCode).to.equal(200)
-        expect(res.body).to.be.an('object')
-        expect(res.body).to.have.property('status')
-        expect(res.body.status).to.equal(true)
+      .end((error, response) => {
+        expect(response.statusCode).to.equal(200)
+        expect(response.body).to.be.an('object')
+        expect(response.body).to.have.property('status')
+        expect(response.body.status).to.equal(true)
         done()
       })
   })
@@ -241,11 +284,11 @@ describe('Links endpoints', () => {
   it('returns error when trying to delete link with ID that doesn\'t exist', (done) => {
     chai.request(app)
       .delete(`/links/${nonExistentID}`)
-      .end((err, res) => {
-        expect(res.statusCode).to.equal(400)
-        expect(res.body).to.be.an('object')
-        expect(res.body).to.have.property('error')
-        expect(res.body.error).to.equal('No link was found with the specified ID')
+      .end((error, response) => {
+        expect(response.statusCode).to.equal(400)
+        expect(response.body).to.be.an('object')
+        expect(response.body).to.have.property('error')
+        expect(response.body.error).to.equal('No link was found with the specified ID!')
         done()
       })
   })
