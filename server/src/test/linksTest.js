@@ -7,13 +7,14 @@ chai.use(require('chai-http'))
 const app = require('../app')
 
 describe('Links endpoints', () => {
-  let firstLink = null
+  let appHost = process.env.APP_HOST
+  let appPort = process.env.APP_PORT
   let nonExistentID = 999999999
   const code = utils.generateLinkCode(8)
-  const testLinkIDs = []
+  const testLinks = []
 
   // always create one link before proceeding
-  before(() => {
+  before((done) => {
     chai.request(app)
       .post('/links')
       .set('Content-Type', 'application/json')
@@ -21,20 +22,44 @@ describe('Links endpoints', () => {
       .send({
         title: 'IDASO Ltd',
         original_link: 'https://www.idaso.ie/',
-        link_code: 'idaso'
+        link_code: `idaso-${utils.generateLinkCode(2)}`
       })
       .end((error, response) => {
-        firstLink = response.body
+        testLinks.push(response.body)
+        done()
       })
   })
 
   // delete links that were generated during testing
-  after(() => {
-    for (let i = 0; i < testLinkIDs.length; i++) {
+  after((done) => {
+    for (let i = 0; i < testLinks.length; i++) {
       chai.request(app)
-        .delete(`/links/${testLinkIDs[i]}`)
+        .delete(`/links/${testLinks[i].id}`)
         .end()
     }
+    done()
+  })
+
+  it('redirects user to correct page based on link code', (done) => {
+    chai.request(app)
+      .get(`/${testLinks[0].link_code}`)
+      .redirects(0)
+      .end((error, response) => {
+        expect(response.headers.location).to.equal(`${testLinks[0].original_link}`)
+        expect(response.statusCode).to.equal(302)
+        done()
+      })
+  })
+
+  it('redirects user to frontend 404 if the code doesn\'t exist in the database', (done) => {
+    chai.request(app)
+      .get('/doesnotexist')
+      .redirects(0)
+      .end((error, response) => {
+        expect(response.headers.location).to.equal(`${appHost}:${appPort}/404`)
+        expect(response.statusCode).to.equal(302)
+        done()
+      })
   })
 
   it('creates a link with code in request', (done) => {
@@ -50,7 +75,7 @@ describe('Links endpoints', () => {
       .type('json')
       .send(model)
       .end((error, response) => {
-        testLinkIDs.push(response.body.id)
+        testLinks.push(response.body)
 
         expect(response.statusCode).to.equal(200)
         expect(response.body).to.be.an('object')
@@ -82,7 +107,7 @@ describe('Links endpoints', () => {
       .type('json')
       .send(model)
       .end((error, response) => {
-        testLinkIDs.push(response.body.id)
+        testLinks.push(response.body)
 
         expect(response.statusCode).to.equal(200)
         expect(response.body).to.be.an('object')
@@ -115,7 +140,7 @@ describe('Links endpoints', () => {
         expect(response.statusCode).to.equal(400)
         expect(response.body).to.be.an('object')
         expect(response.body).to.have.property('error')
-        expect(response.body.error).to.equal('Invalid values in the following fields: original_link.')
+        expect(response.body.error).to.equal('Invalid values in the following fields: Original Link.')
         done()
       })
   })
@@ -136,7 +161,7 @@ describe('Links endpoints', () => {
         expect(response.statusCode).to.equal(400)
         expect(response.body).to.be.an('object')
         expect(response.body).to.have.property('error')
-        expect(response.body.error).to.equal('Specified code is already taken!')
+        expect(response.body.error).to.equal('Specified short code is already taken!')
         done()
       })
   })
@@ -157,7 +182,7 @@ describe('Links endpoints', () => {
         expect(response.statusCode).to.equal(400)
         expect(response.body).to.be.an('object')
         expect(response.body).to.have.property('error')
-        expect(response.body.error).to.equal('Invalid values in the following fields: link_code.')
+        expect(response.body.error).to.equal('Invalid values in the following fields: Short Code.')
         done()
       })
   })
@@ -180,7 +205,7 @@ describe('Links endpoints', () => {
     }
 
     chai.request(app)
-      .put(`/links/${testLinkIDs[0]}`)
+      .put(`/links/${testLinks[1].id}`)
       .set('Content-Type', 'application/json')
       .type('json')
       .send(model)
@@ -203,7 +228,7 @@ describe('Links endpoints', () => {
     }
 
     chai.request(app)
-      .put(`/links/${testLinkIDs[0]}`)
+      .put(`/links/${testLinks[1].id}`)
       .set('Content-Type', 'application/json')
       .type('json')
       .send(model)
@@ -211,7 +236,7 @@ describe('Links endpoints', () => {
         expect(response.statusCode).to.equal(400)
         expect(response.body).to.be.an('object')
         expect(response.body).to.have.property('error')
-        expect(response.body.error).to.equal('Invalid values in the following fields: link_code.')
+        expect(response.body.error).to.equal('Invalid values in the following fields: Short Code.')
         done()
       })
   })
@@ -238,12 +263,11 @@ describe('Links endpoints', () => {
 
   it('returns error when updating a link\'s code to an existing one', (done) => {
     const model = {
-      title: 'Formula 2 Update',
-      link_code: firstLink.link_code
+      link_code: testLinks[0].link_code
     }
 
     chai.request(app)
-      .put(`/links/${testLinkIDs[0]}`)
+      .put(`/links/${testLinks[1].id}`)
       .set('Content-Type', 'application/json')
       .type('json')
       .send(model)
@@ -256,22 +280,9 @@ describe('Links endpoints', () => {
       })
   })
 
-  it('redirects user to correct page based on link code', (done) => {
-    chai.request(app)
-      .get(`/${firstLink.link_code}`)
-      .redirects(0)
-      .end((error, response) => {
-        expect(response.headers.location).to.equal(`${firstLink.original_link}`)
-        expect(response.statusCode).to.equal(302)
-        done()
-      })
-  })
-
-  // it('redirects user to frontend 404 based on link code', (done) => { })
-
   it('deletes a link', (done) => {
     chai.request(app)
-      .delete(`/links/${firstLink.id}`)
+      .delete(`/links/${testLinks[0].id}`)
       .end((error, response) => {
         expect(response.statusCode).to.equal(200)
         expect(response.body).to.be.an('object')

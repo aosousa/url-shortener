@@ -3,8 +3,16 @@ const linkController = express.Router()
 const { body, validationResult } = require('express-validator')
 const linkService = require('../services/linkService')
 const utils = require('../utils/utils')
-// const { PrismaClient } = require('@prisma/client')
-// const prisma = new PrismaClient()
+
+/**
+ * "Convert" DB field names to a readable format to present
+ * in front-end errors
+ */
+const dbFieldsToReadable = {
+  'title': 'Title',
+  'original_link': 'Original Link',
+  'link_code': 'Short Code'
+}
 
 /**
  * Handle requests to POST '/links/'. Create a new link if all of the required
@@ -17,7 +25,7 @@ const createLink = async (request, response) => {
   const result = validationResult(request)
   if (!result.isEmpty()) {
     return response.status(400).send({
-      error: `Invalid values in the following fields: ${result.array().map((err) => err.path).join(', ')}.`
+      error: `Invalid values in the following fields: ${result.array().map((err) => dbFieldsToReadable[err.path]).join(', ')}.`
     })
   }
 
@@ -29,7 +37,7 @@ const createLink = async (request, response) => {
   if (request.body.link_code) {
     if (codeExists) {
       return response.status(400).send({
-        error: `Specified code is already taken!`
+        error: `Specified short code is already taken!`
       })
     }
   } else {
@@ -59,7 +67,7 @@ const updateLink = async (request, response) => {
   const result = validationResult(request)
   if (!result.isEmpty()) {
     return response.status(400).send({
-      error: `Invalid values in the following fields: ${result.array().map((err) => err.path).join(', ')}.`
+      error: `Invalid values in the following fields: ${result.array().map((err) => dbFieldsToReadable[err.path]).join(', ')}.`
     })
   }
 

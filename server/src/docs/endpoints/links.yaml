@@ -277,7 +277,7 @@ components:
       properties:
         error:
           type: string
-          example: "Invalid values in the following fields: original_link."
+          example: "Invalid values in the following fields: Original Link."
           description: Error when there are invalid values in the request body
 
     invalid_id_error:
@@ -293,4 +293,4 @@ components:
       properties:
         error:
           type: string
-          example: "No link was found with the specified code!"
+          example: "No link was found with the specified short code!"

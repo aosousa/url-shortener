@@ -21,10 +21,11 @@ const handleRedirect = async (request, response) => {
 
     response.redirect(link.original_link)
   } else {
-    // TODO: redirect to frontend's 404 page
-    response.status(400).json({
-      error: 'No link was found with the specified code!'
-    })
+    const appHost = process.env.APP_HOST || 'localhost'
+    const appPort = process.env.APP_PORT || 5173
+
+    // redirect to frontend's 404 page if a link wasn't found
+    response.redirect(`${appHost}:${appPort}/404`)
   }
 }
 
