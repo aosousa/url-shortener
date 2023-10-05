@@ -25,7 +25,6 @@ export default async function ApiClient(clientData) {
     if (response.ok) {
       return data
     } else {
-      console.log(data.error)
       throw new Error(data.error)
     }
   } catch (err) {
