@@ -55,7 +55,7 @@
               <option value="title-asc">Title (Ascending)</option>
               <option value="title-desc">Title (Descending)</option>
               <option value="views-asc">Views (Ascending)</option>
-              <option value="views-desc">Views (Ascending)</option>
+              <option value="views-desc">Views (Descending)</option>
               <option value="created-at-asc">Created At (Ascending)</option>
               <option value="created-at-desc">Created At (Descending)</option>
             </select>

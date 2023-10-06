@@ -1,53 +1,61 @@
-# url-shortener-client
+# URL Shortener (Client)
 
-This template should help get you started developing with Vue 3 in Vite.
+Frontend of the URL Shortener application. Built with:
+* Vue 3
+* Pinia (state management)
+* Tailwind (CSS framework)
+* Vitest + Vue Test Utils (Unit / Component testing)
+* Cypress (E2E testing)
 
-## Recommended IDE Setup
+## Project Setup (Development)
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+1. Navigate to the project's ```client``` folder using your terminal of choice.
+2. Install the client's dependencies:
+```sh
+npm install
+```
 
-## Customize configuration
+3. Compile and hot-reload in development mode:
+```sh
+npm run dev
+```
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+## Commands Available
 
-## Project Setup
+### Install Dependencies
 
 ```sh
 npm install
 ```
 
 ### Compile and Hot-Reload for Development
-
 ```sh
 npm run dev
 ```
 
 ### Compile and Minify for Production
-
 ```sh
 npm run build
 ```
 
 ### Run Unit Tests with [Vitest](https://vitest.dev/)
-
 ```sh
 npm run test:unit
 ```
 
 ### Run End-to-End Tests with [Cypress](https://www.cypress.io/)
-
 ```sh
-npm run test:e2e:dev
+npm run test:e2e
 ```
 
-This runs the end-to-end tests against the Vite development server.
-It is much faster than the production build.
-
-But it's still recommended to test the production build with `test:e2e` before deploying (e.g. in CI environments):
-
+### Open Cypress Window for End-to-End Tests
 ```sh
-npm run build
-npm run test:e2e
+npx cypress open
+```
+
+### View Test Coverage Results
+```sh
+npm run coverage
 ```
 
 ### Lint with [ESLint](https://eslint.org/)
@@ -55,3 +63,5 @@ npm run test:e2e
 ```sh
 npm run lint
 ```
+
+## Folder Structure
