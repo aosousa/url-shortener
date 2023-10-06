@@ -7,9 +7,8 @@ chai.use(require('chai-http'))
 const app = require('../app')
 
 describe('Links endpoints', () => {
-  let appHost = process.env.APP_HOST
-  let appPort = process.env.APP_PORT
-  let nonExistentID = 999999999
+  const clientOrigin = process.env.CLIENT_ORIGIN || 'localhost:5173'
+  const nonExistentID = 999999999
   const code = utils.generateLinkCode(8)
   const testLinks = []
 
@@ -56,7 +55,7 @@ describe('Links endpoints', () => {
       .get('/doesnotexist')
       .redirects(0)
       .end((error, response) => {
-        expect(response.headers.location).to.equal(`${appHost}:${appPort}/404`)
+        expect(response.headers.location).to.equal(`${clientOrigin}/404`)
         expect(response.statusCode).to.equal(302)
         done()
       })
