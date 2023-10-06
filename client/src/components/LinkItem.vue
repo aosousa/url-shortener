@@ -19,9 +19,9 @@
 
   const showDeleteLinkModal = ref(false)
 
-  const createdAt = dayjs(linkCopy.created_at).format('YYYY-MM-DD HH:mm:ss')
+  const createdAt = dayjs(linkCopy.created_at).format('DD MMM YYYY HH:mm:ss')
   const updatedAt = linkCopy.updated_at
-    ? dayjs(linkCopy.updatedAt).format('YYYY-MM-DD HH:mm:ss')
+    ? dayjs(linkCopy.updated_at).format('DD MMM YYYY HH:mm:ss')
     : '-'
 
   const copyIcon = ref('fa-clipboard')
@@ -85,6 +85,7 @@
             :icon="copyIcon"
             class="copy-icon"
             @click="copyToClipboard()"
+            data-test-id="copy-to-clipboard-btn"
           />
           {{ copied ? 'Copied' : '' }}
         </span>
@@ -94,6 +95,7 @@
           icon="fa-pencil"
           class="edit-icon"
           @click="editLink()"
+          data-test-id="edit-link-btn"
         />
         <font-awesome-icon
           title="Delete link"
@@ -101,12 +103,13 @@
           icon="fa-trash"
           class="delete-icon"
           @click="showDeleteLinkModal = true"
+          data-test-id="delete-btn"
         />
       </div>
     </div>
     <div class="my-1">
       <!-- prettier-ignore -->
-      <p class="link-code" @click="openLink()" data-test-id="link-short-code">{{`${URI}/${linkCopy.link_code}`}}</p>
+      <p class="link-code" @click="openLink()" data-test-id="link-code">{{`${URI}/${linkCopy.link_code}`}}</p>
     </div>
     <div>
       <!-- prettier-ignore -->

@@ -38,13 +38,25 @@
   >
     <div class="container">
       <p>Are you sure you want to delete the following link?</p>
-      <p class="link">{{ `${URI}/${link.link_code}` }}</p>
+      <p class="link" data-test-id="link-description">{{ `${URI}/${link.link_code}` }}</p>
       <div class="delete-actions">
         <p class="error" v-if="linksStore.error">{{ linksStore.error }}</p>
-        <button type="button" class="cancel" :disabled="linksStore.loading" @click="$emit('close')">
+        <button
+          type="button"
+          class="cancel"
+          :disabled="linksStore.loading"
+          @click="$emit('close')"
+          data-test-id="cancel-btn"
+        >
           Cancel
         </button>
-        <button type="submit" class="delete" :disabled="linksStore.loading" @click="deleteLink()">
+        <button
+          type="submit"
+          class="delete"
+          :disabled="linksStore.loading"
+          @click="deleteLink()"
+          data-test-id="delete-btn"
+        >
           Delete Link
         </button>
       </div>

@@ -51,7 +51,7 @@ describe('Links endpoints', () => {
       })
   })
 
-  it('redirects user to frontend 404 if the code doesn\'t exist in the database', (done) => {
+  it(`redirects user to frontend 404 if the code doesn't exist in the database`, (done) => {
     chai.request(app)
       .get('/doesnotexist')
       .redirects(0)
@@ -241,7 +241,7 @@ describe('Links endpoints', () => {
       })
   })
 
-  it('returns error when trying to update link with ID that doesn\'t exist', (done) => {
+  it(`returns error when trying to update link with ID that doesn't exist`, (done) => {
     const model = {
       title: 'Formula 2 Update',
       link_code: 'f2'
@@ -261,7 +261,7 @@ describe('Links endpoints', () => {
       })
   })
 
-  it('returns error when updating a link\'s code to an existing one', (done) => {
+  it(`returns error when updating a link's code to an existing one`, (done) => {
     const model = {
       link_code: testLinks[0].link_code
     }
@@ -292,7 +292,7 @@ describe('Links endpoints', () => {
       })
   })
 
-  it('returns error when trying to delete link with ID that doesn\'t exist', (done) => {
+  it(`returns error when trying to delete link with ID that doesn't exist`, (done) => {
     chai.request(app)
       .delete(`/links/${nonExistentID}`)
       .end((error, response) => {

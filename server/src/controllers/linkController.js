@@ -49,7 +49,7 @@ const createLink = async (request, response) => {
   }
 
   const newLink = await linkService.create({
-    title: request.body.title,
+    title: request.body.title && request.body.title !== '' ? request.body.title : null,
     original_link: request.body.original_link,
     link_code: linkCode
   })

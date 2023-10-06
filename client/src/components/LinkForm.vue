@@ -97,6 +97,7 @@
         type="url"
         placeholder="https://example.com"
         class="input-item"
+        data-test-id="original-link"
       />
       <div v-if="error && v$.original_link.required.$invalid" class="input-error">
         This is a required field.
@@ -118,22 +119,23 @@
           maxlength="60"
           placeholder="Example"
           class="input-item"
+          data-test-id="title"
         />
         <div v-if="error && v$.title.maxLength.$invalid" class="input-error">
           Maximum of 60 characters allowed.
         </div>
       </div>
       <div class="input-container">
-        <label for="link-code" class="input-label"
-          >Short Code <span v-if="!link">(optional)</span></label
-        >
+        <!-- prettier-ignore -->
+        <label for="link-code" class="input-label">Short Code <span v-if="!link">(optional)</span></label>
         <input
           v-model.trim="model.link_code"
-          id="short-code"
+          id="link-code"
           type="text"
           maxlength="8"
           placeholder="Max. 8 characters (e.g., testcode)"
           class="input-item"
+          data-test-id="link-code"
         />
         <div v-if="error && v$.link_code.maxLength.$invalid" class="input-error">
           Maximum of 8 characters allowed.
@@ -143,10 +145,16 @@
     </div>
     <div class="actions">
       <p class="input-error" v-if="linksStore.error">{{ linksStore.error }}</p>
-      <button type="button" class="cancel" :disabled="linksStore.loading" @click="$emit('cancel')">
+      <button
+        type="button"
+        class="cancel"
+        :disabled="linksStore.loading"
+        @click="$emit('cancel')"
+        data-test-id="cancel-btn"
+      >
         Cancel
       </button>
-      <button type="submit" class="submit" :disabled="linksStore.loading">
+      <button type="submit" class="submit" :disabled="linksStore.loading" data-test-id="submit-btn">
         {{ props.link ? 'Edit Link' : 'Add Link' }}
       </button>
     </div>

@@ -11,7 +11,7 @@
   <div class="modal">
     <div class="modal-header">
       <div class="modal-header-title">
-        <p class="modal-header-title-text">{{ title }}</p>
+        <h2 class="modal-header-title-text" data-test-id="modal-title">{{ title }}</h2>
         <button type="button" class="modal-header-title-div-close" @click="$emit('close')">
           <svg
             class="modal-header-title-div-close-svg"
