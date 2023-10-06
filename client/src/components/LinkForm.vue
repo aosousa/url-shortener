@@ -92,7 +92,7 @@
     <div class="input-container">
       <label for="original-link" class="input-label">Original Link</label>
       <input
-        v-model="model.original_link"
+        v-model.trim="model.original_link"
         id="original-link"
         type="url"
         placeholder="https://example.com"
@@ -112,7 +112,7 @@
       <div class="input-container">
         <label for="title" class="input-label">Title (optional)</label>
         <input
-          v-model="model.title"
+          v-model.trim="model.title"
           id="title"
           type="text"
           maxlength="60"
@@ -128,7 +128,7 @@
           >Short Code <span v-if="!link">(optional)</span></label
         >
         <input
-          v-model="model.link_code"
+          v-model.trim="model.link_code"
           id="short-code"
           type="text"
           maxlength="8"
@@ -179,7 +179,7 @@
   }
 
   .input-error {
-    @apply text-sm text-red-500 mt-1;
+    @apply text-sm text-red-500 my-auto;
   }
 
   .actions {

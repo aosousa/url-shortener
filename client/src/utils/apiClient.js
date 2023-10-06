@@ -28,7 +28,11 @@ export default async function ApiClient(clientData) {
       throw new Error(data.error)
     }
   } catch (err) {
-    return Promise.reject(err)
+    // change failed to fetch a more useful error message to the users
+    const error = {
+      message: err.message !== 'Failed to fetch' ? err.message : 'An error occurred while communicating with the server. Please try again later.'
+    }
+    return Promise.reject(error)
   }
 }
 

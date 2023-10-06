@@ -79,7 +79,12 @@
             <LinkItem :link="link" />
           </div>
         </div>
-        <div v-else class="no-links">No links available.</div>
+        <div v-else class="no-links">
+          <p>
+            No links available.
+            <span class="add-link" @click="changeTab('add-link')">Create one?</span>
+          </p>
+        </div>
       </div>
     </div>
 
@@ -148,5 +153,9 @@
 
   .link-item:not(:first-child) {
     @apply my-4;
+  }
+
+  .add-link {
+    @apply text-sky-500 cursor-pointer hover:underline;
   }
 </style>

@@ -103,9 +103,9 @@ export const useLinksStore = defineStore('links', {
         this.links = response
         this.loading = false
       } catch (error) {
-        console.error(`Failed to load links: ${error}`)
+        console.error(`Failed to load links: ${error.message}`)
         this.loading = false
-        this.error = true
+        this.error = error.message
       }
     },
 

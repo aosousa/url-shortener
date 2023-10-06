@@ -121,20 +121,21 @@ const deleteLink = async (request, response) => {
 }
 
 linkController.post('/', [
-  body('title').isLength({ max: 60 }),
-  body('original_link').custom(async value => {
+  body('title').isLength({ max: 60 }).trim(),
+  body('original_link').trim().custom(async value => {
     // empty URL will fail the validation so we don't need to add the .notEmpty() validation
     const linkIsValid = utils.validateURL(value)
     if (!linkIsValid) {
       throw new Error("Invalid link!")
     }
   }),
-  body('link_code').isLength({ max: 8 })
+  body('link_code').isLength({ max: 8 }).trim()
 ], createLink)
 
 linkController.put('/:id', [
-  body('title').isLength({ max: 60 }),
-  body('link_code').notEmpty().isLength({ max: 8 })
+  body('title').isLength({ max: 60 }).trim(),
+  body('original_link').trim(),
+  body('link_code').trim().notEmpty().isLength({ max: 8 })
 ], updateLink)
 
 linkController.delete('/:id', deleteLink)
