@@ -17,6 +17,8 @@ If the script was successfully executed in your tool of choice (e.g., PHPMyAdmin
 ![Example database](images/database.png)
 
 ## Project Setup (Development)
+This project relies on environment variables defined in [.env](.env), such as database credentials. Confirm that the values are correct for your setup, or change them to the correct values for your use case before continuing.
+
 1. Create the database as mentioned above. The REST API will not work if the database is not created correctly.
 2. Navigate to the project's ```server``` folder using your terminal of choice.
 3. Install the server's dependencies:
@@ -35,7 +37,7 @@ npx prisma migrate
 npm run start
 ```
 
-API documentation is then available via the ```/docs``` endpoint (e.g., http://localhost:8080/docs)
+API documentation is then available via the ```/docs``` endpoint (e.g., http://localhost:8080/docs).
 
 ## Commands Available
 
@@ -60,3 +62,23 @@ npm run test
 ```
 
 ## Folder Structure
+
+### Prisma Schema
+
+    ├── ...
+    ├── prisma                 
+    │   ├── schema.prisma       # Prisma schema generated with the commands above
+    └── ...
+
+### Source Files
+
+    ├── ...
+    ├── src                 
+    │   ├── controllers         # Controller files - each file has methods to handle different API requests. For instance, linkController.js handles requests made to /links endpoints - this is configured in the routes/index.js file
+    |   ├── docs                # API documentation (using Swagger with YAML)
+    |   ├── routes              # API routes configuration
+    |   ├── services            # Service files - each file has methods to interact with a prisma schema. For instance, linkService.js has methods to interact with the prisma link schema, which can then be reused across the controller files.
+    |   ├── test                # API unit test files 
+    |   ├── utils               # Utility methods to re-use across the server source files
+    |   ├── app.js              # Entry point for the API server
+    └── ...
