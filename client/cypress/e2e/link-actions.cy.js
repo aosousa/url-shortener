@@ -137,6 +137,15 @@ describe('Test Link CRUD Actions', () => {
     cy.get(linksTabSelector).should('have.class', 'active-tab')
   })
 
+  it('closes modal on clicking the cancel button', () => {
+    cy.get(deleteLinkSelector).first().click()
+    cy.get(modalSelector).should('be.visible')
+    cy.get(modalHeaderTitleSelector).contains('Delete Link').should('be.visible')
+
+    cy.get(cancelButtonSelector).click()
+    cy.get(modalSelector).should('not.exist')
+  })
+
   it('deletes a link', () => {
     cy.get(linkTitleSelector).first().then((title) => {
       const linkTitle = title.text()
@@ -150,14 +159,5 @@ describe('Test Link CRUD Actions', () => {
       cy.contains(linkTitle).should('not.exist')
     })
 
-  })
-
-  it('closes modal on clicking the cancel button', () => {
-    cy.get(deleteLinkSelector).first().click()
-    cy.get(modalSelector).should('be.visible')
-    cy.get(modalHeaderTitleSelector).contains('Delete Link').should('be.visible')
-
-    cy.get(cancelButtonSelector).click()
-    cy.get(modalSelector).should('not.exist')
   })
 })

@@ -15,10 +15,22 @@ const dbFieldsToReadable = {
 }
 
 /**
- * Handle requests to POST '/links/'. Create a new link if all of the required
- * properties are in the body, otherwise return error
- * @param {*} request 
- * @param {*} response 
+ * Handle requests to GET '/'. Return the full list of links.
+ * 
+ * @param {object} request Express request object
+ * @param {object} response Express response object
+ */
+const getLinks = async (request, response) => {
+  const links = await linkService.findAll()
+
+  response.json(links)
+}
+
+/**
+ * Handle requests to POST '/links/'. Create a new link if all of 
+ * the required properties are in the body, otherwise return error.
+ * @param {object} request Express request object
+ * @param {object} response Express response object
  * @returns 
  */
 const createLink = async (request, response) => {
@@ -58,10 +70,10 @@ const createLink = async (request, response) => {
 }
 
 /**
- * Handle requests to PUT '/links/:id'. Update a link if one is found
- * with the ID received in URL, otherwise return error
- * @param {*} request 
- * @param {*} response 
+ * Handle requests to PUT '/links/:id'. Update a link if one is 
+ * found with the ID received in URL, otherwise return error.
+ * @param {object} request Express request object 
+ * @param {object} response Express response object 
  */
 const updateLink = async (request, response) => {
   const result = validationResult(request)
@@ -98,10 +110,10 @@ const updateLink = async (request, response) => {
 }
 
 /**
- * Handle requests to DELETE '/links/:id'. Delete a link if one is found
- * with the ID received in URL, otherwise return error
- * @param {*} request 
- * @param {*} response 
+ * Handle requests to DELETE '/links/:id'. Delete a link if one is 
+ * found with the ID received in URL, otherwise return error
+ * @param {object} request Express request object 
+ * @param {object} response Express response object 
  */
 const deleteLink = async (request, response) => {
   // check if link with ID exists
@@ -120,6 +132,10 @@ const deleteLink = async (request, response) => {
   }
 }
 
+// route, handler
+linkController.get('/', getLinks)
+
+// route, validations, handler
 linkController.post('/', [
   body('title').isLength({ max: 60 }).trim(),
   body('original_link').trim().custom(async value => {
@@ -132,12 +148,14 @@ linkController.post('/', [
   body('link_code').isLength({ max: 8 }).trim()
 ], createLink)
 
+// route, validations, handler
 linkController.put('/:id', [
   body('title').isLength({ max: 60 }).trim(),
   body('original_link').trim(),
   body('link_code').trim().notEmpty().isLength({ max: 8 })
 ], updateLink)
 
+// route, handler
 linkController.delete('/:id', deleteLink)
 
 module.exports = linkController

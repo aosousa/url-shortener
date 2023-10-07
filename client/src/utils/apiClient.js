@@ -7,7 +7,6 @@ const URI = import.meta.env.VITE_API_URI
  * @param {ApiClientData} clientData Data needed for a request (endpoint, method, request body)
  */
 export default async function ApiClient(clientData) {
-
   const config = {
     method: clientData.method,
     headers: {

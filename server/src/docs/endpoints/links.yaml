@@ -1,20 +1,32 @@
 paths:
   /:
     servers:
-      - url: "/"
     get:
       tags:
         - Links
-      summary: Get all links
-      produces:
-        - application/json
+      summary: Gets the title of a web page through its URL
+      parameters:
+        - in: query
+          name: url
+          schema:
+            type: string
+          required: true
+          description: Full URL of the web page (e.g., https://www.formula1.com)
       responses:
         200:
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/links"
+                $ref: "#/components/schemas/page_title_response"
+
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/page_title_error"
+
 
   /{code}:
     servers:
@@ -37,6 +49,19 @@ paths:
   /links:
     servers:
       - url: "/"
+    get:
+      tags:
+        - Links
+      summary: Get all links
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/links"
     post:
       tags:
         - Links
@@ -293,4 +318,18 @@ components:
       properties:
         error:
           type: string
-          example: "No link was found with the specified short code!"
+          example: No link was found with the specified short code!
+
+    page_title_response:
+      type: object
+      properties:
+        title:
+          type: string
+          example: F1 - The Official Home of Formula 1® Racing
+
+    page_title_error:
+      type: object
+      properties:
+        error:
+          type: string
+          example: Invalid url value!

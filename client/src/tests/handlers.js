@@ -18,8 +18,8 @@ const URI = import.meta.env.VITE_API_URI
  * calling the endpoints used in the Pinia store
  */
 export const handlers = [
-  // Mock call to GET / endpoint
-  rest.get(`${URI}/`, (req, res, ctx) => {
+  // Mock call to GET /links endpoint
+  rest.get(`${URI}/links`, (req, res, ctx) => {
     return res(ctx.status(200), ctx.json(getLinksResponse))
   }),
 

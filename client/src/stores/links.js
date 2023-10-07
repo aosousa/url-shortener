@@ -88,7 +88,6 @@ export const useLinksStore = defineStore('links', {
   actions: {
     /**
      * Load all links in the database and save to state
-     * @returns {Promise<bool>}
      */
     async getLinks() {
       this.loading = true
@@ -99,7 +98,7 @@ export const useLinksStore = defineStore('links', {
           'Content-Type': 'application/json'
         }
 
-        const response = await ApiClient.get('/', headers)
+        const response = await ApiClient.get('/links', headers)
         this.links = response
         this.loading = false
       } catch (error) {
@@ -110,9 +109,32 @@ export const useLinksStore = defineStore('links', {
     },
 
     /**
+     * Get the title of a page through its URL. As this is an
+     * operation that will run in the background after a user
+     * is finished typing the original link while creating a 
+     * new link, the loading and error states are not changed.
+     * @param {string} url Page's full URL (https://...)
+     * @returns {Promise<string>} 
+     */
+    async getPageTitle(url) {  
+        try {
+          const headers = {
+            'Content-Type': 'application/json'
+          }
+    
+          const response = await ApiClient.get(`/?url=${url}`, headers)
+          return response.title
+        } catch (error) {
+          console.error(`Failed to get page title: ${error.message}`)
+          return ''
+        }
+    },
+
+    /**
      * Create a new link
-     * @param {object} model Link data. Should have title, original_link, and
-     * link_code properties.
+     * @param {object} model Link data. Should have title, 
+     * original_link, and link_code properties.
+     * @returns {Promise<bool>}
      */
     async createLink(model) {
       this.loading = true
@@ -143,6 +165,7 @@ export const useLinksStore = defineStore('links', {
      * @param {number} ID ID of the link
      * @param {object} model Link data. Should have title and 
      * link_code properties.
+     * @returns {Promise<bool>}
      */
     async updateLink(ID, model) {
       this.loading = true
@@ -176,6 +199,7 @@ export const useLinksStore = defineStore('links', {
     /**
      * Delete an existing link
      * @param {number} ID ID of the link
+     * @returns {Promise<bool>}
      */
     async deleteLink(ID) {
       this.loading = true

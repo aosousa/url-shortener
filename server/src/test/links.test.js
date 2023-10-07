@@ -188,7 +188,7 @@ describe('Links endpoints', () => {
 
   it('returns list of links', (done) => {
     chai.request(app)
-      .get('/')
+      .get('/links')
       .end((error, response) => {
         expect(response.statusCode).to.equal(200)
         expect(response.body).to.be.an('array')
@@ -299,6 +299,30 @@ describe('Links endpoints', () => {
         expect(response.body).to.be.an('object')
         expect(response.body).to.have.property('error')
         expect(response.body.error).to.equal('No link was found with the specified ID!')
+        done()
+      })
+  })
+
+  it('gets the title of a web page through its URL', (done) => {
+    chai.request(app)
+      .get('/?url=https://www.formula1.com')
+      .end((error, response) => {
+        expect(response.statusCode).to.equal(200)
+        expect(response.body).to.be.an('object')
+        expect(response.body).to.have.property('title')
+        expect(response.body.title).to.not.equal('')
+        done()
+      })
+  })
+
+  it('returns error when trying to get the title of a web page through a malformed URL', (done) => {
+    chai.request(app)
+      .get('/?url=https://www.formula1')
+      .end((error, response) => {
+        expect(response.statusCode).to.equal(400)
+        expect(response.body).to.be.an('object')
+        expect(response.body).to.have.property('error')
+        expect(response.body.error).to.equal('Invalid url value!')
         done()
       })
   })

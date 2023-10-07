@@ -34,4 +34,14 @@ utils.validateURL = (url) => {
   }
 }
 
+/**
+ * Get the title of a web page through its HTML
+ * @param {*} body HTML of the web page
+ * @returns {string}
+ */
+utils.parsePageTitle = (body) => {
+  const match = body.match(/<title>([^<]*)<\/title>/, 'i')
+  return !match || typeof match[1] !== 'string' ? '' : match[1]
+}
+
 module.exports = utils

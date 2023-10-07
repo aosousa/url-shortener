@@ -1,6 +1,31 @@
 const express = require('express')
 const redirectController = express.Router()
 const linkService = require('../services/linkService')
+const utils = require('../utils/utils')
+const axios = require('axios')
+
+/**
+ * Handle requests to GET '/'. This route is used to find
+ * the title of the page sent in via the url query param.
+ * @param {object} request Express request object 
+ * @param {object} response Express response object 
+ */
+const getPageTitle = async (request, response) => {
+  if (request.query.url) {
+    // make a request to the URL received in query
+    axios(request.query.url)
+      .then((res) => response.json({ // send the extracted title from HTML in response
+        title: utils.parsePageTitle(res.data)
+      })) 
+      .catch((error) => response.status(400).json({ // catch possible errors
+        error: 'Invalid url value!'
+      }))
+  } else {
+    response.status(400).json({
+      error: 'Missing url query parameter!'
+    })
+  }
+}
 
 /**
  * Handle requests to GET '/:code', where code is the shortened code
@@ -10,8 +35,8 @@ const linkService = require('../services/linkService')
  * If a row with that code exists in the database, it will redirect 
  * the user to the full URL. Otherwise, it will redirect the user
  * to the frontend's 404
- * @param {*} request 
- * @param {*} response 
+ * @param {object} request Express request object 
+ * @param {object} response Express response object 
  */
 const handleRedirect = async (request, response) => {
   const link = await linkService.findByCode(request.params.code)
@@ -28,18 +53,8 @@ const handleRedirect = async (request, response) => {
   }
 }
 
-/**
- * Handle requests to GET '/'. Return the full list of links.
- * @param {*} request 
- * @param {*} response 
- */
-const getLinks = async (request, response) => {
-  const links = await linkService.findAll()
-
-  response.json(links)
-}
-
+// route, handler
+redirectController.get('/', getPageTitle)
 redirectController.get('/:code', handleRedirect)
-redirectController.get('/', getLinks)
 
 module.exports = redirectController
