@@ -87,7 +87,9 @@
             @click="copyToClipboard()"
             data-test-id="copy-to-clipboard-btn"
           />
-          {{ copied ? 'Copied' : '' }}
+          <span class="xs:hidden sm:inline-block" :class="{ 'ml-2': copied }">{{
+            copied ? 'Copied' : ''
+          }}</span>
         </span>
         <font-awesome-icon
           title="Edit link"
@@ -133,7 +135,13 @@
       </div>
     </div>
 
-    <DeleteLinkModal v-if="showDeleteLinkModal" :link="link" @close="showDeleteLinkModal = false" />
+    <Transition name="fade">
+      <DeleteLinkModal
+        v-if="showDeleteLinkModal"
+        :link="link"
+        @close="showDeleteLinkModal = false"
+      />
+    </Transition>
   </div>
 </template>
 
@@ -163,15 +171,15 @@
   }
 
   .link-actions {
-    @apply ml-auto my-auto;
+    @apply ml-auto my-auto min-w-[6em];
   }
 
   .edit-icon {
-    @apply text-sky-500 ml-4 cursor-pointer;
+    @apply text-sky-500 mx-4 cursor-pointer;
   }
 
   .delete-icon {
-    @apply text-red-500 ml-4 cursor-pointer;
+    @apply text-red-500 cursor-pointer;
   }
 
   .date-icon {
@@ -184,5 +192,18 @@
 
   .date-value {
     @apply text-neutral-700 dark:text-white text-xs ml-2;
+  }
+
+  .fade-enter-from,
+  .fade-leave-to {
+    opacity: 0;
+  }
+
+  .fade-enter-active {
+    transition: opacity 200ms ease-out;
+  }
+
+  .fade-leave-active {
+    transition: opacity 200ms ease-out;
   }
 </style>

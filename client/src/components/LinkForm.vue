@@ -1,9 +1,11 @@
 <script setup>
-  // Stores
   import { ref } from 'vue'
-  import { useLinksStore } from '@/stores/links'
+  import router from '@/router'
   import { maxLength, required, url } from '@vuelidate/validators'
   import useVuelidate from '@vuelidate/core'
+
+  // Stores
+  import { useLinksStore } from '@/stores/links'
 
   const props = defineProps({
     link: Object || null
@@ -44,6 +46,19 @@
   const v$ = useVuelidate(validations, model)
 
   const linksStore = useLinksStore()
+
+  /**
+   * Handle cancel behavior. If we are editing an existing link, use
+   * the router to go back to the home page. If we are creating a
+   * link, send an event to change the active tab to the links tab.
+   */
+  const cancel = () => {
+    if (props.link) {
+      router.push('/')
+    } else {
+      emit('cancel')
+    }
+  }
 
   /**
    * Validate the model according to the defined rules and
@@ -149,7 +164,7 @@
         type="button"
         class="cancel"
         :disabled="linksStore.loading"
-        @click="$emit('cancel')"
+        @click="cancel()"
         data-test-id="cancel-btn"
       >
         Cancel
@@ -175,7 +190,7 @@
   }
 
   .input-label {
-    @apply text-xl font-semibold mb-2;
+    @apply xs:text-xs sm:text-xl font-semibold mb-2;
   }
 
   .input-item {
@@ -183,7 +198,7 @@
   }
 
   .input-item::placeholder {
-    @apply text-white dark:text-black opacity-50;
+    @apply text-white dark:text-black opacity-50 xs:text-xs sm:text-base;
   }
 
   .input-error {

@@ -59,7 +59,7 @@
   }
 
   .title {
-    @apply text-5xl font-semibold hover:text-neutral-600 hover:dark:text-neutral-400 cursor-pointer;
+    @apply xs:text-4xl sm:text-5xl font-semibold hover:text-neutral-600 hover:dark:text-neutral-400 cursor-pointer;
   }
 
   .moon {

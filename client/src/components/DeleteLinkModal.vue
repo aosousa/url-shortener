@@ -1,6 +1,6 @@
 <script setup>
   // Components
-  import Modal from '@/components/Modal.vue'
+  import DefaultModal from '@/components/DefaultModal.vue'
 
   // Stores
   import { useLinksStore } from '@/stores/links'
@@ -32,7 +32,7 @@
 </script>
 
 <template>
-  <Modal
+  <DefaultModal
     :title="`Delete Link - ${link.title && link.title !== '' ? link.title : link.link_code}`"
     @close="$emit('close')"
   >
@@ -61,7 +61,7 @@
         </button>
       </div>
     </div>
-  </Modal>
+  </DefaultModal>
 </template>
 
 <style scoped>

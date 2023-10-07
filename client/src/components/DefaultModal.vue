@@ -40,7 +40,7 @@
 
 <style scoped>
   .modal {
-    @apply flex flex-col fixed top-0 left-0 bottom-0 right-0 w-screen h-screen bg-black bg-opacity-80 p-4 z-50 items-center;
+    @apply flex flex-col fixed top-0 left-0 bottom-0 right-0 w-screen h-screen bg-black bg-opacity-80 p-4 z-50 items-center justify-center;
   }
 
   .modal-header {

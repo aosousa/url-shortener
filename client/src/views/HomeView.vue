@@ -5,6 +5,7 @@
   // Components
   import LinkForm from '@/components/LinkForm.vue'
   import LinkItem from '@/components/LinkItem.vue'
+  import LoadingSpinner from '@/components/LoadingSpinner.vue'
 
   // Stores
   import { useLinksStore } from '@/stores/links'
@@ -72,18 +73,25 @@
           </div>
         </div>
       </div>
+
       <div class="filter-line"></div>
-      <div class="content">
-        <div v-if="links.length > 0">
-          <div v-for="link in links" :key="link.id" class="link-item">
-            <LinkItem :link="link" />
+
+      <div v-if="linksStore.loading">
+        <LoadingSpinner />
+      </div>
+      <div v-else>
+        <div class="content">
+          <div v-if="links.length > 0">
+            <div v-for="link in links" :key="link.id" class="link-item">
+              <LinkItem :link="link" />
+            </div>
           </div>
-        </div>
-        <div v-else class="no-links">
-          <p>
-            No links available.
-            <span class="add-link" @click="changeTab('add-link')">Create one?</span>
-          </p>
+          <div v-else class="no-links">
+            <p>
+              No links available.
+              <span class="add-link" @click="changeTab('add-link')">Create one?</span>
+            </p>
+          </div>
         </div>
       </div>
     </div>
@@ -116,7 +124,7 @@
   }
 
   .filter-items {
-    @apply flex flex-row gap-4;
+    @apply flex flex-row gap-2;
   }
 
   .filter-item {
@@ -128,15 +136,15 @@
   }
 
   .filter-select {
-    @apply bg-neutral-600 dark:bg-white text-white dark:text-black rounded-md p-1;
+    @apply xs:w-full sm:w-56 h-8 bg-neutral-600 dark:bg-white text-white dark:text-black rounded-md p-1;
   }
 
   .filter-input {
-    @apply w-52 bg-neutral-600 dark:bg-white text-white dark:text-black rounded-md p-1;
+    @apply xs:w-full sm:w-52 bg-neutral-600 dark:bg-white text-white dark:text-black rounded-md p-1;
   }
 
   .filter-input::placeholder {
-    @apply text-white dark:text-black opacity-50;
+    @apply text-white dark:text-black opacity-50 xs:text-sm sm:text-base;
   }
 
   .filter-line {

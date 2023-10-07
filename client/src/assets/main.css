@@ -4,13 +4,5 @@
 
 body {
   font-family: 'DM Sans', sans-serif;
-  max-width: 960px;
-  margin: 0 auto;
-  padding: 1rem;
-  @apply bg-gray-200 dark:bg-neutral-800;
-  @apply text-black dark:text-white;
-}
-
-.cancel {
-  @apply bg-neutral-600 hover:bg-neutral-700 focus:bg-neutral-700 disabled:bg-neutral-400 dark:bg-white hover:dark:bg-gray-400 focus:dark:bg-gray-400 disabled:dark:bg-gray-100 disabled:dark:text-gray-500 text-white dark:text-black rounded-md p-2 ml-auto;
+  @apply max-w-[60em] bg-gray-200 dark:bg-neutral-800 text-black dark:text-white p-4 my-0 mx-auto;
 }
