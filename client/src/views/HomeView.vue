@@ -40,7 +40,7 @@
       <button
         class="tab"
         :class="{ 'active-tab': activeTab === 'add-link' }"
-        data-test-id="links-tab"
+        data-test-id="add-link-tab"
         @click="changeTab('add-link')"
       >
         Add Link
@@ -52,7 +52,13 @@
         <div class="filter-items">
           <div class="filter-item">
             <label for="sort-option" class="filter-label">Sort links by</label>
-            <select v-model="sortOption" name="sort-option" id="sort-option" class="filter-select">
+            <select
+              v-model="sortOption"
+              name="sort-option"
+              id="sort-option"
+              class="filter-select"
+              data-test-id="sort-option"
+            >
               <option value="title-asc">Title (Ascending)</option>
               <option value="title-desc">Title (Descending)</option>
               <option value="views-asc">Views (Ascending)</option>
@@ -69,6 +75,7 @@
               type="text"
               class="filter-input"
               placeholder="Filter by title, link, or code"
+              data-test-id="search-filter"
             />
           </div>
         </div>

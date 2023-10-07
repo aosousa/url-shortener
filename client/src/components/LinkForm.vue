@@ -1,7 +1,7 @@
 <script setup>
-  import { ref } from 'vue'
+  import { onUnmounted, ref, watch } from 'vue'
   import router from '@/router'
-  import { maxLength, required, url } from '@vuelidate/validators'
+  import { maxLength, required, requiredIf, url } from '@vuelidate/validators'
   import useVuelidate from '@vuelidate/core'
 
   // Stores
@@ -39,11 +39,21 @@
       url
     },
     link_code: {
+      /**
+       * Short code is not required during creation (where props.link is null)
+       * but it is required during editing (where props.link is not null)
+       */
+      required: requiredIf(() => !!props.link),
       maxLength: maxLength(8)
     }
   }
 
   const v$ = useVuelidate(validations, model)
+
+  // reset error value when changing model data to re-enable submit button
+  watch(model, () => (error.value = false), {
+    deep: true
+  })
 
   const linksStore = useLinksStore()
 
@@ -100,6 +110,9 @@
       })
     }
   }
+
+  // reset store errors when the component is no longer mounted
+  onUnmounted(() => (linksStore.error = null))
 </script>
 
 <template>
@@ -114,15 +127,15 @@
         class="input-item"
         data-test-id="original-link"
       />
-      <div v-if="error && v$.original_link.required.$invalid" class="input-error">
+      <p v-if="error && v$.original_link.required.$invalid" class="input-error">
         This is a required field.
-      </div>
-      <div
+      </p>
+      <p
         v-if="error && v$.original_link.url.$invalid && !v$.original_link.required.$invalid"
         class="input-error"
       >
         Invalid URL.
-      </div>
+      </p>
     </div>
     <div class="input-grid mt-4">
       <div class="input-container">
@@ -136,9 +149,9 @@
           class="input-item"
           data-test-id="title"
         />
-        <div v-if="error && v$.title.maxLength.$invalid" class="input-error">
+        <p v-if="error && v$.title.maxLength.$invalid" class="input-error">
           Maximum of 60 characters allowed.
-        </div>
+        </p>
       </div>
       <div class="input-container">
         <!-- prettier-ignore -->
@@ -152,14 +165,18 @@
           class="input-item"
           data-test-id="link-code"
         />
-        <div v-if="error && v$.link_code.maxLength.$invalid" class="input-error">
+        <p v-if="error && v$.link_code.maxLength.$invalid" class="input-error">
           Maximum of 8 characters allowed.
-        </div>
-        <div v-if="link && model.link_code === ''" class="input-error">Field cannot be empty.</div>
+        </p>
+        <p v-if="link && v$.link_code.required.$invalid" class="input-error">
+          Field cannot be empty while editing.
+        </p>
       </div>
     </div>
     <div class="actions">
-      <p class="input-error" v-if="linksStore.error">{{ linksStore.error }}</p>
+      <p class="input-error" v-if="linksStore.error" data-test-id="store-error">
+        {{ linksStore.error }}
+      </p>
       <button
         type="button"
         class="cancel"
@@ -169,8 +186,13 @@
       >
         Cancel
       </button>
-      <button type="submit" class="submit" :disabled="linksStore.loading" data-test-id="submit-btn">
-        {{ props.link ? 'Edit Link' : 'Add Link' }}
+      <button
+        type="submit"
+        class="submit"
+        :disabled="linksStore.loading || error"
+        data-test-id="submit-btn"
+      >
+        Submit
       </button>
     </div>
   </form>

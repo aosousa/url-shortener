@@ -11,7 +11,7 @@ app.use(cors())
 app.use('/', indexRouter)
 
 const port = process.env.NODE_DOCKER_PORT || 4000
-app.set('port', port);
+app.set('port', port)
 
 /**
  * Event listener for HTTP server "error" event.
@@ -21,7 +21,7 @@ const onError = (error) => {
     throw error
   }
 
-  var bind = typeof port === 'string' ? 'Pipe ' + port : 'Port ' + port;
+  var bind = typeof port === 'string' ? 'Pipe ' + port : 'Port ' + port
 
   // handle specific listen errors with friendly messages
   switch (error.code) {

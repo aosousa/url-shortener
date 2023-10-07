@@ -10,7 +10,7 @@ const redirectController = require('../controllers/redirectController')
 router.use('/docs', swaggerUI.serve)
 router.get('/docs', swaggerUI.setup(apiDocs))
 
-router.use('/', redirectController);
+router.use('/', redirectController)
 router.use('/links', linkController)
 
-module.exports = router;
+module.exports = router

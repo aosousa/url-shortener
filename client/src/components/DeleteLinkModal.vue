@@ -1,4 +1,6 @@
 <script setup>
+  import { onUnmounted } from 'vue'
+
   // Components
   import DefaultModal from '@/components/DefaultModal.vue'
 
@@ -29,6 +31,9 @@
       }
     })
   }
+
+  // reset store errors when the component is no longer mounted
+  onUnmounted(() => (linksStore.error = null))
 </script>
 
 <template>

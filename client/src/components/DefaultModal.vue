@@ -8,7 +8,7 @@
 </script>
 
 <template>
-  <div class="modal">
+  <div class="modal" data-test-id="modal">
     <div class="modal-header">
       <div class="modal-header-title">
         <h2 class="modal-header-title-text" data-test-id="modal-title">{{ title }}</h2>

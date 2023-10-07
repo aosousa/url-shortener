@@ -54,11 +54,11 @@ describe('LinkForm Component Tests', () => {
     })
 
     /**
-     * Check template status - an error div should exist
-     * with 'This is a required field.' message
+     * Check template status - an error message should exist
+     * with 'This is a required field.' text
      */
-    expect(wrapper.find('div.input-error').exists()).toEqual(true)
-    expect(wrapper.find('div.input-error').text()).toEqual('This is a required field.')
+    expect(wrapper.find('p.input-error').exists()).toEqual(true)
+    expect(wrapper.find('p.input-error').text()).toEqual('This is a required field.')
 
     // Check store status - createLink method must not have been called
     expect(store.createLink).toHaveBeenCalledTimes(0)
@@ -175,11 +175,11 @@ describe('LinkForm Component Tests', () => {
     })
 
     /**
-     * Check template status - an error div should exist
-     * with 'This is a required field.' message
+     * Check template status - an error message should exist
+     * with 'This is a required field.' text
      */
-    expect(wrapper.find('div.input-error').exists()).toEqual(true)
-    expect(wrapper.find('div.input-error').text()).toEqual('This is a required field.')
+    expect(wrapper.find('p.input-error').exists()).toEqual(true)
+    expect(wrapper.find('p.input-error').text()).toEqual('This is a required field.')
 
     // Check store status - updateLink method must not have been called
     expect(store.updateLink).toHaveBeenCalledTimes(0)
@@ -243,7 +243,7 @@ describe('LinkForm Component Tests', () => {
     expect(wrapper.vm.model).toEqual(model)
 
     // Check template status - no error divs must be exist
-    expect(wrapper.find('div.input-error').exists()).toEqual(false)
+    expect(wrapper.find('p.input-error').exists()).toEqual(false)
 
     /**
      * Check store status - updateLink method must have been

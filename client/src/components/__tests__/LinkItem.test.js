@@ -20,7 +20,7 @@ describe('LinkItem Component Tests', () => {
     clipboard: {
       writeText: vitest.fn(),
     },
-  });
+  })
 
   it('renders the correct information of a link with all its properties set', async () => {
     const mockLinks = getLinksResponse
@@ -57,14 +57,14 @@ describe('LinkItem Component Tests', () => {
     })
 
     expect(wrapper.find('p[data-test-id=link-title]').text()).toEqual(mockLink.title)
-    expect(wrapper.find('p[data-test-id=link-code]').text()).toEqual(`${URI}/${mockLink.link_code}`)
+    expect(wrapper.find('a[data-test-id=link-code]').text()).toEqual(`${URI}/${mockLink.link_code}`)
     expect(wrapper.find('a[data-test-id=link-original-link]').text()).toEqual(mockLink.original_link)
     expect(wrapper.find('p[data-test-id=link-views]').text()).toEqual(`Visited ${mockLink.views} ${mockLink.views === 1 ? 'time' : 'times'}`)
     expect(wrapper.find('p[data-test-id=link-created-at]').text()).toEqual(mockLinkCreatedAt)
     expect(wrapper.find('p[data-test-id=link-updated-at]').text()).toEqual(mockLinkUpdatedAt)
 
     await wrapper.find('font-awesome-icon-stub[icon=fa-clipboard]').trigger('click')
-    expect(navigator.clipboard.writeText).toHaveBeenCalledWith(`${URI}/${mockLink.link_code}`);
+    expect(navigator.clipboard.writeText).toHaveBeenCalledWith(`${URI}/${mockLink.link_code}`)
   })
 
   it('renders the correct information of a link without values in the optional properties', async () => {
@@ -101,13 +101,13 @@ describe('LinkItem Component Tests', () => {
     })
 
     expect(wrapper.find('p[data-test-id=link-title]').text()).toEqual('-')
-    expect(wrapper.find('p[data-test-id=link-code]').text()).toEqual(`${URI}/${mockLink.link_code}`)
+    expect(wrapper.find('a[data-test-id=link-code]').text()).toEqual(`${URI}/${mockLink.link_code}`)
     expect(wrapper.find('a[data-test-id=link-original-link]').text()).toEqual(mockLink.original_link)
     expect(wrapper.find('p[data-test-id=link-views]').text()).toEqual(`Visited ${mockLink.views} ${mockLink.views === 1 ? 'time' : 'times'}`)
     expect(wrapper.find('p[data-test-id=link-created-at]').text()).toEqual(mockLinkCreatedAt)
     expect(wrapper.find('p[data-test-id=link-updated-at]').text()).toEqual('-')
 
     await wrapper.find('font-awesome-icon-stub[icon=fa-clipboard]').trigger('click')
-    expect(navigator.clipboard.writeText).toHaveBeenCalledWith(`${URI}/${mockLink.link_code}`);
+    expect(navigator.clipboard.writeText).toHaveBeenCalledWith(`${URI}/${mockLink.link_code}`)
   })
 })

@@ -46,10 +46,10 @@
   }
 
   /**
-   * Open link and optimistically increment link's views by one
+   * Optimistically increment link's views by one
    */
-  const openLink = () => {
-    window.open(`${URI}/${linkCopy.link_code}`, '_blank')
+  const updateLinkViews = () => {
+    // window.open(`${URI}/${linkCopy.link_code}`, '_blank')
     linkCopy.views += 1
   }
 
@@ -105,13 +105,13 @@
           icon="fa-trash"
           class="delete-icon"
           @click="showDeleteLinkModal = true"
-          data-test-id="delete-btn"
+          data-test-id="delete-link-btn"
         />
       </div>
     </div>
     <div class="my-1">
       <!-- prettier-ignore -->
-      <p class="link-code" @click="openLink()" data-test-id="link-code">{{`${URI}/${linkCopy.link_code}`}}</p>
+      <a :href="`${URI}/${linkCopy.link_code}`" target="_blank" class="link-code" @click="updateLinkViews()" data-test-id="link-code">{{`${URI}/${linkCopy.link_code}`}}</a>
     </div>
     <div>
       <!-- prettier-ignore -->

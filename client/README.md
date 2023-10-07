@@ -44,13 +44,17 @@ npm run test:unit
 ```
 
 ### Run End-to-End Tests with [Cypress](https://www.cypress.io/)
+Both the client and the server have to be running in order for the E2E tests to work.
+
 ```sh
 npm run test:e2e
 ```
 
-### Open Cypress Window for End-to-End Tests
+### Open Cypress Window to manually End-to-End Tests
+Both the client and the server have to be running in order for the E2E tests to work.
+
 ```sh
-npx cypress open
+npm run test:e2e:dev
 ```
 
 ### View Test Coverage Results
