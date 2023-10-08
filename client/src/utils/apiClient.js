@@ -1,4 +1,4 @@
-import ApiClientData from "@/classes/apiClientData"
+import ApiClientData from '@/classes/apiClientData'
 
 const URI = import.meta.env.VITE_API_URI
 

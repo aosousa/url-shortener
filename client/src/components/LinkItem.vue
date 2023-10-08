@@ -48,10 +48,7 @@
   /**
    * Optimistically increment link's views by one
    */
-  const updateLinkViews = () => {
-    // window.open(`${URI}/${linkCopy.link_code}`, '_blank')
-    linkCopy.views += 1
-  }
+  const updateLinkViews = () => (linkCopy.views += 1)
 
   /**
    * Open the edit link page for the link received via props

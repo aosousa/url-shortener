@@ -25,12 +25,34 @@ To deploy the project without Docker, please view the instructions in the [backe
 ## Features
 - Create shortened version of a link, either with a custom link or with a generated code
 - Detect title of the original link when creating a new link
+
+![Create Link](/images/create_link.png)
+
+
 - View list of links created and number of times each one was visited
+
+![Home](/images/home_dark.png)
+
 - Redirect to original link in a new tab after clicking or accessing the shortened link
+- Redirect to 404 page when trying to access a link through a short code that doesn't exist
+
+![404](/images/404.png)
+
 - Copy short link to clipboard
+
+![Copy to Clipboard](/images/copy_to_clipboard.png)
+
 - Edit a link's information (URL, title, code)
+
+![Edit Link](/images/edit_link.png)
+
 - Delete a link
+
+![Delete Link](/images/delete_link.png)
+
 - Light / Dark Theme - who doesn't like dark mode?
+
+![Light Theme](/images/home_light.png) ![Dark Theme](/images/home_dark.png)
 
 ## Tech Stack
 

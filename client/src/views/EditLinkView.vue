@@ -33,7 +33,7 @@
    * request was successful, so we should send the user back to the home
    * page
    */
-  const handleSubmit = () => router.push('/')
+  const handleSubmit = () => (router.push('/'))
 </script>
 
 <template>

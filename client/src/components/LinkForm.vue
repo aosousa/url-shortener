@@ -45,8 +45,9 @@
     },
     link_code: {
       /**
-       * Short code is not required during creation (where props.link is null)
-       * but it is required during editing (where props.link is not null)
+       * Short code is not required during creation (when props.link is null)
+       * because one will be generated in the server in that scenario, but it
+       * it is required during editing (when props.link is not null)
        */
       required: requiredIf(() => !!props.link),
       maxLength: maxLength(8)

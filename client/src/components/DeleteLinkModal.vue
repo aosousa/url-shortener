@@ -9,6 +9,7 @@
 
   const URI = import.meta.env.VITE_API_URI
 
+  // receive link to delete as prop
   const props = defineProps({
     link: Object
   })

@@ -4,7 +4,7 @@ const prisma = new PrismaClient()
 
 /**
  * Get all links in the database
- * @returns 
+ * @returns {array}
  */
 linkService.findAll = async () => {
   return prisma.link.findMany()
@@ -41,8 +41,8 @@ linkService.findByID = async (id) => {
 }
 
 /**
- * Create a link
- * @param {*} data 
+ * Create a new link
+ * @param {object} data Data of the link to create 
  */
 linkService.create = async (data) => {
   return prisma.link.create({
