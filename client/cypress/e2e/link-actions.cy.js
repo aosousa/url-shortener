@@ -101,7 +101,7 @@ describe('Test Link CRUD Actions', () => {
   })
 
   it('shows links with filtered text', () => {
-    const searchText = 'GAA'
+    const searchText = 'F1'
 
     cy.get(searchFilterSelector).type(searchText)
     cy.get(linkTitleSelector).contains(searchText).should('exist')
