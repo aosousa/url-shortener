@@ -12,7 +12,7 @@ Backend of the URL Shortener application. Built with:
 ## Database Setup
 Use the [database script](../database/url_shortener.sql) to create the required MySQL database for this project. 
 
-If the script was successfully executed in your tool of choice (e.g., PHPMyAdmin, MySQL Workbench, DBeaver), you should be able to see a ```url_shortener``` database, with a ```link``` table in it.
+If the script was successfully executed in your tool of choice (e.g., phpMyAdmin, MySQL Workbench, DBeaver), you should be able to see a ```url_shortener``` database, with a ```link``` table in it.
 
 ![Example database](images/database.png)
 
@@ -37,7 +37,7 @@ npx prisma migrate
 npm run start
 ```
 
-API documentation is then available via the ```/docs``` endpoint (e.g., http://localhost:4000/docs).
+The API is then available to use, and its documentation is available via the ```/docs``` endpoint (e.g., http://localhost:4000/docs).
 
 ## Commands Available
 
@@ -57,7 +57,10 @@ npm run start:migrate
 ```
 
 ### Run tests
-Note: The API server cannot be running before executing this command, as it creates an instance of the server to run the tests on.
+Note: The API server cannot be running before executing this command, as the command creates an instance of the server to run the tests on.
+
+As is the case during development, it is important to verify that the environment variables defined in [.env](.env) are correct before running the tests. Otherwise, they might fail due to a problem establishing connection to the database.
+
 ```sh
 npm run test
 ```

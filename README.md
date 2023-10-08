@@ -27,6 +27,7 @@ To deploy the project without Docker, please view the instructions in the [backe
 - Detect title of the original link when creating a new link
 - View list of links created and number of times each one was visited
 - Redirect to original link in a new tab after clicking or accessing the shortened link
+- Copy short link to clipboard
 - Edit a link's information (URL, title, code)
 - Delete a link
 - Light / Dark Theme - who doesn't like dark mode?

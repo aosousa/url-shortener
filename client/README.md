@@ -50,8 +50,9 @@ npm run test:unit
 ```
 
 ### Run End-to-End Tests with [Cypress](https://www.cypress.io/)
-A production build (folder ```dist```) must be available before running this command. 
-Both the client and the server must also be running in order for this to work correctly.
+Note: A production build (folder ```dist```) must be available before running this command. You can create a production build with the ```npm run build``` command.
+
+Both the client and the server must also be running in order for this command to execute correctly.
 
 ```sh
 npm run test:e2e
