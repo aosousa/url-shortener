@@ -32,13 +32,14 @@ describe('Test Link CRUD Actions', () => {
     cy.get(addLinkButtonSelector).should('have.class', 'active-tab')
 
     const linkModel = {
-      title: 'GAA News',
-      original_link: 'https://www.gaa.ie',
-      link_code: 'gaanews'
+      title: 'F1',
+      original_link: 'https://www.formula1.com',
+      link_code: 'f1news'
     }
 
     // fill out the form inputs
     cy.get(inputOriginalLinkSelector).type(linkModel.original_link)
+    cy.get(inputTitleSelector).clear()
     cy.get(inputTitleSelector).type(linkModel.title)
     cy.get(inputLinkCodeSelector).type(linkModel.link_code)
     cy.get(submitButtonSelector).click()
@@ -55,9 +56,9 @@ describe('Test Link CRUD Actions', () => {
     cy.get(addLinkButtonSelector).should('have.class', 'active-tab')
 
     const linkModel = {
-      title: 'GAA Fixtures and Results',
-      original_link: 'https://www.gaa.ie/fixtures-results/',
-      link_code: 'gaanews'
+      title: 'F1',
+      original_link: 'https://www.formula1.com',
+      link_code: 'f1news'
     }
 
     // fill out the form inputs

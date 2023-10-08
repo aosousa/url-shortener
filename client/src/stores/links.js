@@ -116,18 +116,18 @@ export const useLinksStore = defineStore('links', {
      * @param {string} url Page's full URL (https://...)
      * @returns {Promise<string>} 
      */
-    async getPageTitle(url) {  
-        try {
-          const headers = {
-            'Content-Type': 'application/json'
-          }
-    
-          const response = await ApiClient.get(`/?url=${url}`, headers)
-          return response.title
-        } catch (error) {
-          console.error(`Failed to get page title: ${error.message}`)
-          return ''
+    async getPageTitle(url) {
+      try {
+        const headers = {
+          'Content-Type': 'application/json'
         }
+
+        const response = await ApiClient.get(`/?url=${url}`, headers)
+        return response.title
+      } catch (error) {
+        console.error(`Failed to get page title: ${error.message}`)
+        return ''
+      }
     },
 
     /**
@@ -182,6 +182,7 @@ export const useLinksStore = defineStore('links', {
         const link = this.linkByID(ID)
         if (link) {
           link.title = response.title
+          link.original_link = response.original_link
           link.link_code = response.link_code
           link.updated_at = response.updated_at
         }

@@ -103,6 +103,7 @@ const updateLink = async (request, response) => {
 
   const updatedLink = await linkService.update(linkID, {
     title: request.body.title,
+    original_link: request.body.original_link,
     link_code: request.body.link_code
   })
 

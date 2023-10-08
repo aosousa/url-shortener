@@ -24,6 +24,11 @@
     link_code: props.link ? props.link.link_code : ''
   })
 
+  // reset error value when changing model data to re-enable submit button
+  watch(model, () => (error.value = false), {
+    deep: true
+  })
+
   const error = ref(false)
 
   /**
@@ -50,12 +55,21 @@
 
   const v$ = useVuelidate(validations, model)
 
-  // reset error value when changing model data to re-enable submit button
-  watch(model, () => (error.value = false), {
-    deep: true
-  })
-
   const linksStore = useLinksStore()
+
+  /**
+   * Set model title based on URL's content. Only activated when
+   * creating a link, not while editing an existing one.
+   */
+  const setTitleFromLink = () => {
+    if (!props.link) {
+      setTimeout(() => {
+        linksStore
+          .getPageTitle(model.value.original_link)
+          .then((title) => (model.value.title = title))
+      }, 250)
+    }
+  }
 
   /**
    * Handle cancel behavior. If we are editing an existing link, use
@@ -126,6 +140,7 @@
         placeholder="https://example.com"
         class="input-item"
         data-test-id="original-link"
+        @blur="setTitleFromLink()"
       />
       <p v-if="error && v$.original_link.required.$invalid" class="input-error">
         This is a required field.
