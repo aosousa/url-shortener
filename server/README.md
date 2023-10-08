@@ -57,6 +57,7 @@ npm run start:migrate
 ```
 
 ### Run tests
+Note: The API server cannot be running before executing this command, as it creates an instance of the server to run the tests on.
 ```sh
 npm run test
 ```
