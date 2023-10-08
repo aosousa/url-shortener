@@ -37,7 +37,7 @@ npx prisma migrate
 npm run start
 ```
 
-API documentation is then available via the ```/docs``` endpoint (e.g., http://localhost:8080/docs).
+API documentation is then available via the ```/docs``` endpoint (e.g., http://localhost:4000/docs).
 
 ## Commands Available
 

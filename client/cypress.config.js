@@ -9,6 +9,6 @@ module.exports = defineConfig({
     },
   },
   env: {
-    apiHost: 'http://localhost:8080'
+    apiHost: 'http://localhost:4000'
   }
 })
