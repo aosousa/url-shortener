@@ -17,7 +17,7 @@ If the script was successfully executed in your tool of choice (e.g., phpMyAdmin
 ![Example database](images/database.png)
 
 ## Project Setup (Development)
-This project relies on environment variables defined in [.env](.env), such as database credentials. Confirm that the values are correct for your setup, or change them to the correct values for your use case before continuing, especially the database values which are set for to values for a Docker deployment by default.
+This project relies on environment variables defined in [.env](.env), such as database credentials. Confirm that the values are correct for your setup, or change them to the correct values for your use case before continuing, especially the database values which are set to values for a Docker deployment by default.
 
 1. Create the database as mentioned above. The REST API will not work if the database is not created correctly.
 2. Navigate to the project's ```server``` folder using your terminal of choice.
